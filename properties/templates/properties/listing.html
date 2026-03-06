@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>العقارات | بوابة العقارات</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--ink:#0d0d0d;--cream:#f2ede4;--gold:#c9a84c;--gold-l:#e8c96e;--navy:#1a3a5c;--navy-d:#0a2240;--white:#ffffff;--card-shadow:0 8px 32px rgba(0,0,0,.1)}
+    body{font-family:'Cairo',sans-serif;background:var(--cream);min-height:100vh}
+
+    /* ── NAVBAR ── */
+    nav{background:var(--navy-d);height:66px;display:flex;align-items:center;padding:0 40px;gap:24px;position:sticky;top:0;z-index:200;box-shadow:0 4px 20px rgba(0,0,0,.2)}
+    .nav-brand{font-size:20px;font-weight:900;color:var(--gold-l);text-decoration:none;display:flex;align-items:center;gap:8px;margin-left:auto}
+    .nav-links{display:flex;align-items:center;gap:8px}
+    .nav-links a{color:rgba(255,255,255,.75);text-decoration:none;font-size:14px;font-weight:600;padding:8px 14px;border-radius:8px;transition:all .2s;font-family:'Cairo',sans-serif}
+    .nav-links a:hover,.nav-links a.active{background:rgba(255,255,255,.1);color:#fff}
+    .nav-links a.fav{color:var(--gold-l)}
+    .nav-user{display:flex;align-items:center;gap:10px;margin-right:auto}
+    .nav-username{font-size:13px;color:rgba(255,255,255,.65)}
+    .btn-nav{padding:8px 18px;border-radius:8px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:all .2s;border:none}
+    .btn-logout{background:rgba(201,168,76,.15);color:var(--gold-l);border:1px solid rgba(201,168,76,.35)}
+    .btn-logout:hover{background:rgba(201,168,76,.28)}
+    .btn-login{background:var(--gold);color:var(--ink)}
+    .btn-login:hover{background:var(--gold-l)}
+
+    /* ── HERO ── */
+    .hero{background:linear-gradient(135deg,var(--navy-d) 0%,var(--navy) 60%,#1e4d7b 100%);padding:72px 40px 80px;text-align:center;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;width:500px;height:500px;border-radius:50%;border:70px solid rgba(201,168,76,.06);top:-150px;right:-100px}
+    .hero::after{content:'';position:absolute;width:350px;height:350px;border-radius:50%;border:50px solid rgba(201,168,76,.05);bottom:-100px;left:-80px}
+    .hero h1{font-size:42px;font-weight:900;color:#fff;line-height:1.3;position:relative;z-index:1}
+    .hero h1 span{color:var(--gold-l)}
+    .hero p{color:rgba(255,255,255,.65);font-size:16px;margin-top:12px;position:relative;z-index:1}
+    .hero-stats{display:flex;justify-content:center;gap:40px;margin-top:40px;position:relative;z-index:1}
+    .hs{text-align:center}
+    .hs-num{font-size:32px;font-weight:900;color:var(--gold-l)}
+    .hs-label{font-size:13px;color:rgba(255,255,255,.6)}
+
+    /* ── FILTER BAR ── */
+    .filter-wrap{background:var(--white);border-bottom:1px solid #ebebeb;padding:0 40px;position:sticky;top:66px;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+    .filter-form{display:flex;align-items:center;gap:12px;height:60px;overflow-x:auto}
+    .filter-form::-webkit-scrollbar{height:3px}
+    .filter-form::-webkit-scrollbar-thumb{background:var(--gold);border-radius:2px}
+    .fi-input{padding:9px 14px;border:1.5px solid #e0e0e0;border-radius:10px;font-family:'Cairo',sans-serif;font-size:13px;color:var(--ink);background:#fafafa;outline:none;transition:border-color .2s;direction:rtl;white-space:nowrap}
+    .fi-input:focus{border-color:var(--gold)}
+    .fi-input[type="text"]{min-width:180px}
+    .fi-select{min-width:130px}
+    .fi-price{width:120px}
+    .btn-filter{padding:9px 22px;background:var(--navy);color:#fff;border:none;border-radius:10px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap}
+    .btn-filter:hover{background:var(--gold);color:var(--ink)}
+    .btn-reset{padding:9px 16px;background:#f5f5f5;color:#888;border:none;border-radius:10px;font-family:'Cairo',sans-serif;font-size:13px;cursor:pointer;text-decoration:none;white-space:nowrap}
+
+    /* ── MAIN CONTENT ── */
+    .container{max-width:1280px;margin:0 auto;padding:40px 32px}
+    .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+    .section-title{font-size:22px;font-weight:900;color:var(--ink)}
+    .section-title span{color:var(--gold);font-size:16px;font-weight:600;margin-right:10px}
+    .no-results{text-align:center;padding:80px 20px;color:#aaa}
+    .no-results .icon{font-size:64px;margin-bottom:16px}
+    .no-results h3{font-size:20px;font-weight:700;color:#ccc}
+
+    /* ── PROPERTY GRID ── */
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:28px}
+
+    /* ── PROPERTY CARD ── */
+    .card{background:var(--white);border-radius:20px;overflow:hidden;box-shadow:var(--card-shadow);transition:all .35s cubic-bezier(.22,1,.36,1);animation:fadeCard .5s ease both}
+    .card:hover{transform:translateY(-6px);box-shadow:0 24px 56px rgba(0,0,0,.15)}
+    @keyframes fadeCard{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    .card:nth-child(1){animation-delay:.05s}
+    .card:nth-child(2){animation-delay:.1s}
+    .card:nth-child(3){animation-delay:.15s}
+    .card:nth-child(4){animation-delay:.2s}
+    .card:nth-child(5){animation-delay:.25s}
+    .card:nth-child(6){animation-delay:.3s}
+
+    /* Image area */
+    .card-img{position:relative;height:210px;overflow:hidden;background:#e8e0d4}
+    .card-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
+    .card:hover .card-img img{transform:scale(1.05)}
+    .card-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:56px;background:linear-gradient(135deg,#e8e0d4,#d4ccbe)}
+    .badge-status{position:absolute;top:14px;right:14px;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:700;font-family:'Cairo',sans-serif}
+    .badge-sale{background:var(--navy);color:#fff}
+    .badge-rent{background:#27ae60;color:#fff}
+    .badge-type{position:absolute;top:14px;left:14px;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:700;font-family:'Cairo',sans-serif;background:rgba(0,0,0,.55);color:#fff;backdrop-filter:blur(4px)}
+    .fav-btn{position:absolute;bottom:14px;left:14px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.9);border:none;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+    .fav-btn:hover{transform:scale(1.15);background:#fff}
+    .fav-btn.active{background:#fff0f0}
+
+    /* Card body */
+    .card-body{padding:20px 22px}
+    .card-title{font-size:17px;font-weight:800;color:var(--ink);margin-bottom:6px;line-height:1.4;text-decoration:none;display:block}
+    .card-title:hover{color:var(--navy)}
+    .card-loc{display:flex;align-items:center;gap:6px;color:#888;font-size:13px;margin-bottom:16px}
+    .card-loc svg{flex-shrink:0}
+    .card-meta{display:flex;gap:16px;margin-bottom:16px;padding:12px 0;border-top:1px solid #f5f5f5;border-bottom:1px solid #f5f5f5}
+    .meta-item{display:flex;align-items:center;gap:5px;font-size:13px;color:#777}
+    .meta-item strong{color:var(--ink);font-weight:700}
+    .card-price{font-size:22px;font-weight:900;color:var(--navy)}
+    .card-price small{font-size:13px;font-weight:600;color:#999;margin-right:4px}
+    .card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:16px}
+    .btn-detail{padding:10px 22px;background:linear-gradient(135deg,var(--navy),#2a5a8c);color:#fff;border-radius:10px;text-decoration:none;font-size:14px;font-weight:700;font-family:'Cairo',sans-serif;transition:all .2s}
+    .btn-detail:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(26,58,92,.3)}
+    .btn-negotiate{padding:10px 18px;background:linear-gradient(135deg,var(--gold),var(--gold-l));color:var(--ink);border:none;border-radius:10px;text-decoration:none;font-size:14px;font-weight:700;font-family:'Cairo',sans-serif;cursor:pointer;transition:all .2s}
+    .btn-negotiate:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(201,168,76,.35)}
+
+    /* Messages */
+    .msgs-wrap{padding:0 32px}
+    .msgs{list-style:none;margin-bottom:0}
+    .msgs li{padding:13px 18px;border-radius:12px;font-size:14px;margin-bottom:8px}
+    .msgs .success{background:#f0fef4;color:#27ae60;border-right:3px solid #27ae60}
+    .msgs .error{background:#fef0f0;color:#c0392b;border-right:3px solid #c0392b}
+    .msgs .info{background:#f0f6fe;color:var(--navy);border-right:3px solid var(--navy)}
+
+    @media(max-width:768px){
+      nav{padding:0 16px}
+      .hero{padding:48px 20px 56px}.hero h1{font-size:28px}
+      .hero-stats{gap:24px}.hs-num{font-size:24px}
+      .filter-wrap{padding:0 16px}
+      .container{padding:24px 16px}
+      .grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="{% url 'listing' %}" class="nav-brand">🏡 عقاراتي</a>
+  <div class="nav-links">
+    <a href="{% url 'listing' %}" class="active">العقارات</a>
+    {% if user.is_authenticated %}
+    <a href="{% url 'my_favorites' %}" class="fav">❤️ المفضلة</a>
+    {% endif %}
+  </div>
+  <div class="nav-user">
+    {% if user.is_authenticated %}
+      <span class="nav-username">{{ user.first_name|default:user.username }}</span>
+      <a href="{% url 'logout' %}" class="btn-nav btn-logout">خروج</a>
+    {% else %}
+      <a href="{% url 'login' %}" class="btn-nav btn-login">تسجيل الدخول</a>
+      <a href="{% url 'register' %}" class="btn-nav btn-logout" style="border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.8)">إنشاء حساب</a>
+    {% endif %}
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>اكتشف <span>أفضل العقارات</span><br>في المملكة العربية السعودية</h1>
+  <p>بيع، شراء، وإيجار بكل سهولة وأمان</p>
+  <div class="hero-stats">
+    <div class="hs"><div class="hs-num">{{ total_count }}</div><div class="hs-label">عقار متاح</div></div>
+    <div class="hs"><div class="hs-num">100%</div><div class="hs-label">عقارات موثقة</div></div>
+    <div class="hs"><div class="hs-num">24/7</div><div class="hs-label">خدمة العملاء</div></div>
+  </div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-wrap">
+  <form method="get" class="filter-form">
+    <input type="text" name="search" class="fi-input" placeholder="🔍 ابحث عن عقار أو موقع..." value="{{ filters.search }}">
+    <select name="type" class="fi-input fi-select">
+      <option value="">كل الأنواع</option>
+      <option value="apartment" {% if filters.type == 'apartment' %}selected{% endif %}>شقة</option>
+      <option value="villa" {% if filters.type == 'villa' %}selected{% endif %}>فيلا</option>
+      <option value="office" {% if filters.type == 'office' %}selected{% endif %}>مكتب</option>
+      <option value="land" {% if filters.type == 'land' %}selected{% endif %}>أرض</option>
+      <option value="warehouse" {% if filters.type == 'warehouse' %}selected{% endif %}>مستودع</option>
+    </select>
+    <select name="status" class="fi-input fi-select">
+      <option value="">للبيع والإيجار</option>
+      <option value="sale" {% if filters.status == 'sale' %}selected{% endif %}>للبيع</option>
+      <option value="rent" {% if filters.status == 'rent' %}selected{% endif %}>للإيجار</option>
+    </select>
+    <input type="number" name="min_price" class="fi-input fi-price" placeholder="أقل سعر" value="{{ filters.min_price }}">
+    <input type="number" name="max_price" class="fi-input fi-price" placeholder="أعلى سعر" value="{{ filters.max_price }}">
+    <button type="submit" class="btn-filter">بحث</button>
+    <a href="{% url 'listing' %}" class="btn-reset">مسح</a>
+  </form>
+</div>
+
+<!-- MESSAGES -->
+{% if messages %}
+<div class="msgs-wrap" style="padding-top:20px">
+  <ul class="msgs">{% for m in messages %}<li class="{{ m.tags }}">{{ m }}</li>{% endfor %}</ul>
+</div>
+{% endif %}
+
+<!-- MAIN GRID -->
+<div class="container">
+  <div class="section-header">
+    <div class="section-title">
+      العقارات المتاحة
+      <span>({{ total_count }} عقار)</span>
+    </div>
+  </div>
+
+  {% if properties %}
+  <div class="grid">
+    {% for p in properties %}
+    <div class="card">
+      <!-- Image -->
+      <div class="card-img">
+        {% with img=p.get_primary_image %}
+          {% if img %}
+            <img src="{{ img.image.url }}" alt="{{ p.title }}">
+          {% else %}
+            <div class="card-img-placeholder">
+              {% if p.property_type == 'villa' %}🏰
+              {% elif p.property_type == 'office' %}🏢
+              {% elif p.property_type == 'land' %}🌿
+              {% elif p.property_type == 'warehouse' %}🏭
+              {% else %}🏠{% endif %}
+            </div>
+          {% endif %}
+        {% endwith %}
+        <span class="badge-status {% if p.status == 'sale' %}badge-sale{% else %}badge-rent{% endif %}">
+          {{ p.get_status_display }}
+        </span>
+        <span class="badge-type">{{ p.get_property_type_display }}</span>
+        {% if user.is_authenticated %}
+        <form method="post" action="{% url 'toggle_favorite' p.pk %}" style="display:inline">
+          {% csrf_token %}
+          <button type="submit" class="fav-btn {% if p.pk in favorite_ids %}active{% endif %}" title="{% if p.pk in favorite_ids %}حذف من المفضلة{% else %}أضف للمفضلة{% endif %}">
+            {% if p.pk in favorite_ids %}❤️{% else %}🤍{% endif %}
+          </button>
+        </form>
+        {% endif %}
+      </div>
+
+      <!-- Body -->
+      <div class="card-body">
+        <a href="{% url 'detail' p.pk %}" class="card-title">{{ p.title }}</a>
+        <div class="card-loc">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          {{ p.location }}
+        </div>
+        <div class="card-meta">
+          <div class="meta-item">📐 <strong>{{ p.area|floatformat:0 }}</strong> م²</div>
+          {% if p.bedrooms %}<div class="meta-item">🛏 <strong>{{ p.bedrooms }}</strong> غرف</div>{% endif %}
+          {% if p.bathrooms %}<div class="meta-item">🚿 <strong>{{ p.bathrooms }}</strong> حمام</div>{% endif %}
+        </div>
+        <div class="card-price">
+          {{ p.price|floatformat:0 }}
+          <small>ريال {% if p.status == 'rent' %}/شهرياً{% endif %}</small>
+        </div>
+        <div class="card-footer">
+          <a href="{% url 'detail' p.pk %}" class="btn-detail">عرض التفاصيل</a>
+          {% if user.is_authenticated %}
+          <a href="{% url 'negotiate' p.pk %}" class="btn-negotiate">💬 تفاوض</a>
+          {% else %}
+          <a href="{% url 'login' %}?next={% url 'negotiate' p.pk %}" class="btn-negotiate">💬 تفاوض</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="no-results">
+    <div class="icon">🔍</div>
+    <h3>لا توجد عقارات تطابق بحثك</h3>
+    <p style="margin-top:8px;font-size:14px">جرّب تغيير معايير البحث</p>
+    <a href="{% url 'listing' %}" style="display:inline-block;margin-top:20px;padding:12px 28px;background:var(--navy);color:#fff;border-radius:12px;text-decoration:none;font-weight:700">عرض جميع العقارات</a>
+  </div>
+  {% endif %}
+</div>
+
+</body>
+</html>

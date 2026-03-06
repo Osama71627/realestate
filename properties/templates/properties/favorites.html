@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>المفضلة | عقاراتي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--ink:#0d0d0d;--cream:#f2ede4;--gold:#c9a84c;--gold-l:#e8c96e;--navy:#1a3a5c;--navy-d:#0a2240;--white:#fff}
+    body{font-family:'Cairo',sans-serif;background:var(--cream);min-height:100vh}
+    nav{background:var(--navy-d);height:66px;display:flex;align-items:center;padding:0 40px;gap:24px;position:sticky;top:0;z-index:200;box-shadow:0 4px 20px rgba(0,0,0,.2)}
+    .nav-brand{font-size:20px;font-weight:900;color:var(--gold-l);text-decoration:none;display:flex;align-items:center;gap:8px;margin-left:auto}
+    .nav-links a{color:rgba(255,255,255,.75);text-decoration:none;font-size:14px;font-weight:600;padding:8px 14px;border-radius:8px;transition:all .2s;font-family:'Cairo',sans-serif}
+    .nav-links a:hover{background:rgba(255,255,255,.1);color:#fff}
+    .nav-user{display:flex;align-items:center;gap:10px;margin-right:auto}
+    .nav-username{font-size:13px;color:rgba(255,255,255,.65)}
+    .btn-nav{padding:8px 18px;border-radius:8px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;background:rgba(201,168,76,.15);color:var(--gold-l);border:1px solid rgba(201,168,76,.35)}
+    .container{max-width:1200px;margin:0 auto;padding:40px 32px;animation:up .5s ease both}
+    @keyframes up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    .page-header{margin-bottom:32px}
+    .page-header h1{font-size:30px;font-weight:900;color:var(--ink);display:flex;align-items:center;gap:12px}
+    .page-header p{color:#999;font-size:14px;margin-top:6px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px}
+    .card{background:var(--white);border-radius:20px;overflow:hidden;box-shadow:0 8px 28px rgba(0,0,0,.09);transition:all .3s;animation:fc .4s ease both}
+    @keyframes fc{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    .card:hover{transform:translateY(-5px);box-shadow:0 20px 48px rgba(0,0,0,.13)}
+    .card-img{height:200px;background:#e8e0d4;overflow:hidden;position:relative}
+    .card-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+    .card:hover .card-img img{transform:scale(1.05)}
+    .card-img-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:52px;background:linear-gradient(135deg,#e8e0d4,#d4ccbe)}
+    .badge{position:absolute;top:12px;right:12px;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:700}
+    .badge-sale{background:var(--navy);color:#fff}
+    .badge-rent{background:#27ae60;color:#fff}
+    .card-body{padding:18px 20px}
+    .card-title{font-size:16px;font-weight:800;color:var(--ink);margin-bottom:5px;text-decoration:none;display:block}
+    .card-title:hover{color:var(--navy)}
+    .card-loc{font-size:12px;color:#aaa;margin-bottom:12px;display:flex;align-items:center;gap:4px}
+    .card-price{font-size:20px;font-weight:900;color:var(--navy);margin-bottom:14px}
+    .card-price small{font-size:12px;color:#aaa}
+    .card-actions{display:flex;gap:8px}
+    .btn-d{flex:1;padding:10px;background:linear-gradient(135deg,var(--navy),#2a5a8c);color:#fff;border-radius:10px;text-decoration:none;font-size:13px;font-weight:700;text-align:center;transition:all .2s;font-family:'Cairo',sans-serif}
+    .btn-d:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(26,58,92,.3)}
+    .btn-rm{padding:10px 14px;background:#fff0f0;color:#e74c3c;border:none;border-radius:10px;cursor:pointer;font-size:16px;transition:all .2s;font-family:'Cairo',sans-serif}
+    .btn-rm:hover{background:#ffe0e0}
+    .empty{text-align:center;padding:80px 20px}
+    .empty-icon{font-size:80px;margin-bottom:20px}
+    .empty h2{font-size:24px;font-weight:900;color:#ccc}
+    .empty p{font-size:14px;color:#bbb;margin-top:8px}
+    .empty a{display:inline-block;margin-top:24px;padding:13px 32px;background:var(--navy);color:#fff;border-radius:14px;text-decoration:none;font-weight:700;font-size:15px;transition:all .2s}
+    .empty a:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(26,58,92,.3)}
+    @media(max-width:600px){.container{padding:24px 16px}.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<nav>
+  <a href="{% url 'listing' %}" class="nav-brand">🏡 عقاراتي</a>
+  <div class="nav-links"><a href="{% url 'listing' %}">العقارات</a></div>
+  <div class="nav-user">
+    <span class="nav-username">{{ user.first_name|default:user.username }}</span>
+    <a href="{% url 'logout' %}" class="btn-nav">خروج</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="page-header">
+    <h1>❤️ عقاراتي المفضلة</h1>
+    <p>{{ favorites.count }} عقار محفوظ في قائمة المفضلة</p>
+  </div>
+
+  {% if favorites %}
+  <div class="grid">
+    {% for fav in favorites %}
+    {% with p=fav.property %}
+    <div class="card">
+      <div class="card-img">
+        {% with img=p.get_primary_image %}
+          {% if img %}<img src="{{ img.image.url }}" alt="{{ p.title }}">
+          {% else %}
+            <div class="card-img-ph">
+              {% if p.property_type == 'villa' %}🏰
+              {% elif p.property_type == 'office' %}🏢
+              {% else %}🏠{% endif %}
+            </div>
+          {% endif %}
+        {% endwith %}
+        <span class="badge {% if p.status == 'sale' %}badge-sale{% else %}badge-rent{% endif %}">{{ p.get_status_display }}</span>
+      </div>
+      <div class="card-body">
+        <a href="{% url 'detail' p.pk %}" class="card-title">{{ p.title }}</a>
+        <div class="card-loc">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          {{ p.location }}
+        </div>
+        <div class="card-price">{{ p.price|floatformat:0 }} <small>ريال</small></div>
+        <div class="card-actions">
+          <a href="{% url 'detail' p.pk %}" class="btn-d">عرض التفاصيل</a>
+          <form method="post" action="{% url 'toggle_favorite' p.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn-rm" title="حذف من المفضلة">🗑️</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% endwith %}
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty">
+    <div class="empty-icon">💔</div>
+    <h2>لا توجد عقارات في المفضلة</h2>
+    <p>ابدأ بتصفح العقارات وأضف المفضلة منها</p>
+    <a href="{% url 'listing' %}">استعراض العقارات</a>
+  </div>
+  {% endif %}
+</div>
+</body>
+</html>

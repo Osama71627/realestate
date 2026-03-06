@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>طلب التفاوض | عقاراتي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--ink:#0d0d0d;--cream:#f2ede4;--gold:#c9a84c;--gold-l:#e8c96e;--navy:#1a3a5c;--navy-d:#0a2240;--white:#fff;--err:#c0392b;--ok:#27ae60}
+    body{font-family:'Cairo',sans-serif;background:var(--cream);min-height:100vh}
+    nav{background:var(--navy-d);height:66px;display:flex;align-items:center;padding:0 40px;gap:24px;position:sticky;top:0;z-index:200;box-shadow:0 4px 20px rgba(0,0,0,.2)}
+    .nav-brand{font-size:20px;font-weight:900;color:var(--gold-l);text-decoration:none;display:flex;align-items:center;gap:8px;margin-left:auto}
+    .nav-back{color:rgba(255,255,255,.75);text-decoration:none;font-size:14px;font-weight:600;padding:8px 14px;border-radius:8px;transition:all .2s;font-family:'Cairo',sans-serif}
+    .nav-back:hover{background:rgba(255,255,255,.1);color:#fff}
+    .nav-user{display:flex;align-items:center;gap:10px;margin-right:auto}
+    .nav-username{font-size:13px;color:rgba(255,255,255,.65)}
+    .btn-nav{padding:8px 18px;border-radius:8px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;background:rgba(201,168,76,.15);color:var(--gold-l);border:1px solid rgba(201,168,76,.35)}
+    .container{max-width:900px;margin:0 auto;padding:48px 32px;animation:up .5s ease both}
+    @keyframes up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    .breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:#aaa;margin-bottom:28px}
+    .breadcrumb a{color:var(--navy);text-decoration:none;font-weight:600}
+    .layout{display:grid;grid-template-columns:1fr 320px;gap:28px;align-items:start}
+
+    /* Property mini card */
+    .prop-mini{background:var(--white);border-radius:18px;overflow:hidden;box-shadow:0 8px 28px rgba(0,0,0,.09)}
+    .prop-mini-img{height:180px;background:#e8e0d4;display:flex;align-items:center;justify-content:center;font-size:60px}
+    .prop-mini-img img{width:100%;height:100%;object-fit:cover}
+    .prop-mini-body{padding:20px}
+    .prop-mini-title{font-size:16px;font-weight:800;color:var(--ink);margin-bottom:6px}
+    .prop-mini-loc{font-size:13px;color:#888;margin-bottom:14px;display:flex;align-items:center;gap:5px}
+    .prop-price-mini{font-size:20px;font-weight:900;color:var(--navy)}
+    .prop-price-mini small{font-size:12px;color:#aaa}
+    .prop-specs-mini{display:flex;gap:12px;margin-top:12px;padding-top:12px;border-top:1px solid #f0f0f0}
+    .spec-mini{font-size:12px;color:#888;display:flex;align-items:center;gap:4px}
+
+    /* Form card */
+    .form-card{background:var(--white);border-radius:20px;padding:36px;box-shadow:0 8px 32px rgba(0,0,0,.09)}
+    .form-head{margin-bottom:28px}
+    .form-head .label{font-size:12px;font-weight:700;color:var(--gold);letter-spacing:2px;margin-bottom:6px}
+    .form-head h2{font-size:26px;font-weight:900;color:var(--ink)}
+    .form-head p{font-size:14px;color:#aaa;margin-top:6px}
+    .fg{margin-bottom:22px}
+    .fg label{display:block;font-size:13px;font-weight:700;color:#555;margin-bottom:7px}
+    .form-input{width:100%;padding:13px 16px;border:2px solid #ebebeb;border-radius:12px;font-size:14px;font-family:'Cairo',sans-serif;color:var(--ink);background:#fafafa;transition:all .25s;outline:none;direction:rtl}
+    .form-input:focus{border-color:var(--gold);background:#fff;box-shadow:0 0 0 4px rgba(201,168,76,.1)}
+    .form-input::placeholder{color:#ccc}
+    textarea.form-input{resize:vertical;min-height:110px}
+    .ferr{margin-top:5px;font-size:12px;color:var(--err)}
+    .hint{font-size:12px;color:#bbb;margin-top:5px}
+    .btn-submit{width:100%;padding:16px;background:linear-gradient(135deg,var(--gold),var(--gold-l));color:var(--ink);border:none;border-radius:12px;font-size:17px;font-weight:900;font-family:'Cairo',sans-serif;cursor:pointer;transition:all .3s;margin-top:4px}
+    .btn-submit:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(201,168,76,.4)}
+    .btn-cancel{display:block;text-align:center;margin-top:14px;font-size:14px;color:#aaa;text-decoration:none;font-family:'Cairo',sans-serif;transition:color .2s}
+    .btn-cancel:hover{color:var(--err)}
+
+    /* Already sent */
+    .already-sent{background:#f0fef4;border:2px solid #b2f0c8;border-radius:16px;padding:28px;text-align:center}
+    .already-icon{font-size:52px;margin-bottom:12px}
+    .already-sent h3{font-size:20px;font-weight:900;color:#27ae60}
+    .already-sent p{font-size:14px;color:#666;margin-top:8px;line-height:1.7}
+    .already-sent .status-badge{display:inline-block;margin-top:14px;padding:6px 18px;background:rgba(39,174,96,.15);color:#27ae60;border-radius:20px;font-size:13px;font-weight:700}
+    .back-btn{display:inline-block;margin-top:20px;padding:12px 28px;background:var(--navy);color:#fff;border-radius:12px;text-decoration:none;font-weight:700;font-size:14px;transition:all .2s}
+    .back-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(26,58,92,.3)}
+
+    @media(max-width:768px){.layout{grid-template-columns:1fr}.container{padding:28px 16px}}
+  </style>
+</head>
+<body>
+<nav>
+  <a href="{% url 'listing' %}" class="nav-brand">🏡 عقاراتي</a>
+  <a href="{% url 'detail' property.pk %}" class="nav-back">← عودة للعقار</a>
+  <div class="nav-user">
+    <span class="nav-username">{{ user.first_name|default:user.username }}</span>
+    <a href="{% url 'logout' %}" class="btn-nav">خروج</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="breadcrumb">
+    <a href="{% url 'listing' %}">العقارات</a>
+    <span>›</span>
+    <a href="{% url 'detail' property.pk %}">{{ property.title }}</a>
+    <span>›</span>
+    <span>طلب التفاوض</span>
+  </div>
+
+  <div class="layout">
+    <!-- Form -->
+    <div class="form-card">
+      {% if existing %}
+        <div class="already-sent">
+          <div class="already-icon">✅</div>
+          <h3>تم إرسال طلبك مسبقاً</h3>
+          <p>لقد أرسلت طلب تفاوض على هذا العقار.<br>سيتواصل معك المالك على الرقم الذي أدخلته.</p>
+          <div class="status-badge">
+            {% if existing.status == 'pending' %}⏳ قيد الانتظار
+            {% elif existing.status == 'contacted' %}📞 تم التواصل
+            {% else %}✓ مغلق{% endif %}
+          </div>
+          <br>
+          <a href="{% url 'detail' property.pk %}" class="back-btn">العودة للعقار</a>
+        </div>
+      {% else %}
+        <div class="form-head">
+          <div class="label">⬡ طلب تفاوض</div>
+          <h2>أرسل طلب التفاوض</h2>
+          <p>سيصل طلبك إلى مالك العقار وسيتواصل معك</p>
+        </div>
+
+        {% if messages %}<ul style="list-style:none;margin-bottom:20px">{% for m in messages %}<li style="padding:12px 16px;border-radius:10px;font-size:14px;background:#fef0f0;color:var(--err);border-right:3px solid var(--err)">{{ m }}</li>{% endfor %}</ul>{% endif %}
+
+        <form method="post">
+          {% csrf_token %}
+          <div class="fg">
+            <label>{{ form.phone.label }}</label>
+            {{ form.phone }}
+            {% if form.phone.errors %}<div class="ferr">{{ form.phone.errors.0 }}</div>{% endif %}
+            <div class="hint">سيستخدم المالك هذا الرقم للتواصل معك</div>
+          </div>
+          <div class="fg">
+            <label>{{ form.offered_price.label }}</label>
+            {{ form.offered_price }}
+            {% if form.offered_price.errors %}<div class="ferr">{{ form.offered_price.errors.0 }}</div>{% endif %}
+            <div class="hint">السعر الأصلي: {{ property.price|floatformat:0 }} ريال — اتركه فارغاً إذا لم تريد اقتراح سعر</div>
+          </div>
+          <div class="fg">
+            <label>{{ form.message.label }}</label>
+            {{ form.message }}
+            {% if form.message.errors %}<div class="ferr">{{ form.message.errors.0 }}</div>{% endif %}
+          </div>
+          <button type="submit" class="btn-submit">📨 إرسال طلب التفاوض</button>
+        </form>
+        <a href="{% url 'detail' property.pk %}" class="btn-cancel">إلغاء والعودة</a>
+      {% endif %}
+    </div>
+
+    <!-- Property mini card -->
+    <div class="prop-mini">
+      {% with img=property.get_primary_image %}
+      <div class="prop-mini-img">
+        {% if img %}<img src="{{ img.image.url }}" alt="{{ property.title }}">
+        {% else %}
+          {% if property.property_type == 'villa' %}🏰
+          {% elif property.property_type == 'office' %}🏢
+          {% else %}🏠{% endif %}
+        {% endif %}
+      </div>
+      {% endwith %}
+      <div class="prop-mini-body">
+        <div class="prop-mini-title">{{ property.title }}</div>
+        <div class="prop-mini-loc">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          {{ property.location }}
+        </div>
+        <div class="prop-price-mini">{{ property.price|floatformat:0 }} <small>ريال</small></div>
+        <div class="prop-specs-mini">
+          <span class="spec-mini">📐 {{ property.area|floatformat:0 }} م²</span>
+          {% if property.bedrooms %}<span class="spec-mini">🛏 {{ property.bedrooms }}</span>{% endif %}
+          {% if property.bathrooms %}<span class="spec-mini">🚿 {{ property.bathrooms }}</span>{% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

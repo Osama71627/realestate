@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ property.title }} | عقاراتي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--ink:#0d0d0d;--cream:#f2ede4;--gold:#c9a84c;--gold-l:#e8c96e;--navy:#1a3a5c;--navy-d:#0a2240;--white:#fff}
+    body{font-family:'Cairo',sans-serif;background:var(--cream);min-height:100vh}
+
+    nav{background:var(--navy-d);height:66px;display:flex;align-items:center;padding:0 40px;gap:24px;position:sticky;top:0;z-index:200;box-shadow:0 4px 20px rgba(0,0,0,.2)}
+    .nav-brand{font-size:20px;font-weight:900;color:var(--gold-l);text-decoration:none;display:flex;align-items:center;gap:8px;margin-left:auto}
+    .nav-back{color:rgba(255,255,255,.75);text-decoration:none;font-size:14px;font-weight:600;padding:8px 14px;border-radius:8px;transition:all .2s;font-family:'Cairo',sans-serif;display:flex;align-items:center;gap:6px}
+    .nav-back:hover{background:rgba(255,255,255,.1);color:#fff}
+    .nav-user{display:flex;align-items:center;gap:10px;margin-right:auto}
+    .nav-username{font-size:13px;color:rgba(255,255,255,.65)}
+    .btn-nav{padding:8px 18px;border-radius:8px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:all .2s;border:none}
+    .btn-logout{background:rgba(201,168,76,.15);color:var(--gold-l);border:1px solid rgba(201,168,76,.35)}
+
+    .container{max-width:1100px;margin:0 auto;padding:40px 32px;animation:up .5s ease both}
+    @keyframes up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+    /* Messages */
+    .msgs{list-style:none;margin-bottom:24px}
+    .msgs li{padding:13px 18px;border-radius:12px;font-size:14px;margin-bottom:8px}
+    .msgs .success{background:#f0fef4;color:#27ae60;border-right:3px solid #27ae60}
+    .msgs .error{background:#fef0f0;color:#c0392b;border-right:3px solid #c0392b}
+
+    /* Breadcrumb */
+    .breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:#aaa;margin-bottom:24px}
+    .breadcrumb a{color:var(--navy);text-decoration:none;font-weight:600}
+    .breadcrumb a:hover{color:var(--gold)}
+
+    /* Layout */
+    .detail-layout{display:grid;grid-template-columns:1fr 380px;gap:32px;align-items:start}
+
+    /* Gallery */
+    .gallery{background:var(--white);border-radius:20px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.1)}
+    .main-img{position:relative;height:440px;background:#e8e0d4;overflow:hidden;cursor:pointer}
+    .main-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+    .main-img:hover img{transform:scale(1.03)}
+    .main-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:100px;background:linear-gradient(135deg,#e8e0d4,#d4ccbe)}
+    .badge-overlay{position:absolute;top:20px;right:20px;display:flex;gap:8px}
+    .badge{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:700;font-family:'Cairo',sans-serif}
+    .badge-sale{background:var(--navy);color:#fff}
+    .badge-rent{background:#27ae60;color:#fff}
+    .badge-type-o{background:rgba(0,0,0,.55);color:#fff;backdrop-filter:blur(4px)}
+    .thumbs{display:flex;gap:8px;padding:12px;background:#f9f7f4;overflow-x:auto}
+    .thumbs::-webkit-scrollbar{height:3px}
+    .thumbs::-webkit-scrollbar-thumb{background:var(--gold)}
+    .thumb{width:70px;height:55px;border-radius:8px;overflow:hidden;cursor:pointer;flex-shrink:0;border:2px solid transparent;transition:border-color .2s}
+    .thumb.active,.thumb:hover{border-color:var(--gold)}
+    .thumb img{width:100%;height:100%;object-fit:cover}
+    .thumb-placeholder{width:100%;height:100%;background:#e0d8ce;display:flex;align-items:center;justify-content:center;font-size:20px}
+
+    /* Info panel */
+    .info-panel{display:flex;flex-direction:column;gap:20px}
+    .info-card{background:var(--white);border-radius:20px;padding:28px;box-shadow:0 8px 32px rgba(0,0,0,.08)}
+
+    .prop-title{font-size:26px;font-weight:900;color:var(--ink);line-height:1.3;margin-bottom:8px}
+    .prop-loc{display:flex;align-items:center;gap:6px;color:#888;font-size:14px;margin-bottom:20px}
+    .price-box{background:linear-gradient(135deg,var(--navy-d),var(--navy));border-radius:14px;padding:20px;text-align:center;margin-bottom:20px}
+    .price-label{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:4px}
+    .price-val{font-size:32px;font-weight:900;color:var(--gold-l)}
+    .price-unit{font-size:14px;color:rgba(255,255,255,.5);margin-top:2px}
+
+    /* Specs grid */
+    .specs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+    .spec{background:#f9f7f4;border-radius:12px;padding:14px;text-align:center}
+    .spec-icon{font-size:22px;margin-bottom:4px}
+    .spec-val{font-size:16px;font-weight:800;color:var(--ink)}
+    .spec-label{font-size:11px;color:#aaa;margin-top:2px}
+
+    /* Action buttons */
+    .actions{display:flex;flex-direction:column;gap:10px}
+    .btn-main{width:100%;padding:15px;border:none;border-radius:12px;font-family:'Cairo',sans-serif;font-size:16px;font-weight:800;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .3s}
+    .btn-negotiate-main{background:linear-gradient(135deg,var(--gold),var(--gold-l));color:var(--ink)}
+    .btn-negotiate-main:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(201,168,76,.4)}
+    .btn-fav-main{background:var(--white);color:var(--ink);border:2px solid #ebebeb}
+    .btn-fav-main:hover,.btn-fav-main.active{background:#fff0f0;border-color:#ffcccc;color:#e74c3c}
+    .btn-fav-main.active{background:#fff0f0;border-color:#ffaaaa}
+
+    /* Description */
+    .desc-section h3{font-size:16px;font-weight:800;color:var(--ink);margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid var(--cream)}
+    .desc-text{font-size:14px;color:#666;line-height:1.9}
+    .no-desc{font-size:14px;color:#bbb;font-style:italic}
+
+    /* Owner info */
+    .owner-row{display:flex;align-items:center;gap:14px;padding-top:12px;border-top:1px solid #f0f0f0;margin-top:12px}
+    .owner-av{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-l));display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:var(--ink)}
+    .owner-name{font-size:14px;font-weight:700;color:var(--ink)}
+    .owner-label{font-size:12px;color:#aaa}
+
+    @media(max-width:900px){.detail-layout{grid-template-columns:1fr}}
+    @media(max-width:600px){.container{padding:20px 16px}.main-img{height:260px}}
+  </style>
+</head>
+<body>
+<nav>
+  <a href="{% url 'listing' %}" class="nav-brand">🏡 عقاراتي</a>
+  <a href="{% url 'listing' %}" class="nav-back">← العودة للعقارات</a>
+  <div class="nav-user">
+    {% if user.is_authenticated %}
+      <span class="nav-username">{{ user.first_name|default:user.username }}</span>
+      <a href="{% url 'logout' %}" class="btn-nav btn-logout">خروج</a>
+    {% else %}
+      <a href="{% url 'login' %}" class="btn-nav" style="background:var(--gold);color:var(--ink)">دخول</a>
+    {% endif %}
+  </div>
+</nav>
+
+<div class="container">
+  {% if messages %}<ul class="msgs">{% for m in messages %}<li class="{{ m.tags }}">{{ m }}</li>{% endfor %}</ul>{% endif %}
+
+  <div class="breadcrumb">
+    <a href="{% url 'listing' %}">العقارات</a>
+    <span>›</span>
+    <span>{{ property.get_property_type_display }}</span>
+    <span>›</span>
+    <span>{{ property.title }}</span>
+  </div>
+
+  <div class="detail-layout">
+    <!-- Gallery -->
+    <div>
+      <div class="gallery">
+        <div class="main-img" id="mainImg">
+          {% if images %}
+            <img id="mainImgEl" src="{{ images.0.image.url }}" alt="{{ property.title }}">
+          {% else %}
+            <div class="main-img-placeholder">
+              {% if property.property_type == 'villa' %}🏰
+              {% elif property.property_type == 'office' %}🏢
+              {% elif property.property_type == 'land' %}🌿
+              {% else %}🏠{% endif %}
+            </div>
+          {% endif %}
+          <div class="badge-overlay">
+            <span class="badge {% if property.status == 'sale' %}badge-sale{% else %}badge-rent{% endif %}">{{ property.get_status_display }}</span>
+            <span class="badge badge-type-o">{{ property.get_property_type_display }}</span>
+          </div>
+        </div>
+        {% if images.count > 1 %}
+        <div class="thumbs">
+          {% for img in images %}
+          <div class="thumb {% if forloop.first %}active{% endif %}" onclick="switchImg('{{ img.image.url }}', this)">
+            <img src="{{ img.image.url }}" alt="">
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Description -->
+      <div class="info-card" style="margin-top:20px">
+        <div class="desc-section">
+          <h3>📋 وصف العقار</h3>
+          {% if property.description %}
+            <p class="desc-text">{{ property.description|linebreaks }}</p>
+          {% else %}
+            <p class="no-desc">لا يوجد وصف مفصل لهذا العقار</p>
+          {% endif %}
+        </div>
+        <div class="owner-row">
+          <div class="owner-av">{{ property.created_by.first_name|slice:":1"|upper|default:property.created_by.username|slice:":1"|upper }}</div>
+          <div>
+            <div class="owner-name">{{ property.created_by.get_full_name|default:property.created_by.username }}</div>
+            <div class="owner-label">مالك العقار · منذ {{ property.created_at|date:"Y/m/d" }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Panel -->
+    <div class="info-panel">
+      <div class="info-card">
+        <h1 class="prop-title">{{ property.title }}</h1>
+        <div class="prop-loc">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          {{ property.location }}
+        </div>
+
+        <div class="price-box">
+          <div class="price-label">السعر</div>
+          <div class="price-val">{{ property.price|floatformat:0 }}</div>
+          <div class="price-unit">ريال سعودي{% if property.status == 'rent' %} / شهرياً{% endif %}</div>
+        </div>
+
+        <div class="specs">
+          <div class="spec">
+            <div class="spec-icon">📐</div>
+            <div class="spec-val">{{ property.area|floatformat:0 }} م²</div>
+            <div class="spec-label">المساحة</div>
+          </div>
+          {% if property.bedrooms %}
+          <div class="spec">
+            <div class="spec-icon">🛏</div>
+            <div class="spec-val">{{ property.bedrooms }}</div>
+            <div class="spec-label">غرف النوم</div>
+          </div>
+          {% endif %}
+          {% if property.bathrooms %}
+          <div class="spec">
+            <div class="spec-icon">🚿</div>
+            <div class="spec-val">{{ property.bathrooms }}</div>
+            <div class="spec-label">الحمامات</div>
+          </div>
+          {% endif %}
+          <div class="spec">
+            <div class="spec-icon">🏷️</div>
+            <div class="spec-val">{{ property.get_property_type_display }}</div>
+            <div class="spec-label">نوع العقار</div>
+          </div>
+        </div>
+
+        <div class="actions">
+          {% if user.is_authenticated %}
+            <a href="{% url 'negotiate' property.pk %}" class="btn-main btn-negotiate-main">💬 طلب التفاوض على العقار</a>
+            <form method="post" action="{% url 'toggle_favorite' property.pk %}">
+              {% csrf_token %}
+              <button type="submit" class="btn-main btn-fav-main {% if is_favorite %}active{% endif %}">
+                {% if is_favorite %}❤️ محفوظ في المفضلة{% else %}🤍 أضف إلى المفضلة{% endif %}
+              </button>
+            </form>
+          {% else %}
+            <a href="{% url 'login' %}?next={% url 'negotiate' property.pk %}" class="btn-main btn-negotiate-main">💬 سجّل دخولك للتفاوض</a>
+            <a href="{% url 'login' %}?next={{ request.path }}" class="btn-main btn-fav-main">🤍 سجّل دخولك لحفظ العقار</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchImg(url, el) {
+  const main = document.getElementById('mainImgEl');
+  if (main) { main.src = url; }
+  document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+</script>
+</body>
+</html>
