@@ -16,6 +16,7 @@
     .nav-links a{color:rgba(255,255,255,.75);text-decoration:none;font-size:14px;font-weight:600;padding:8px 14px;border-radius:8px;transition:all .2s;font-family:'Cairo',sans-serif}
     .nav-links a:hover,.nav-links a.active{background:rgba(255,255,255,.1);color:#fff}
     .nav-links a.fav{color:var(--gold-l)}
+    .nav-links a.my-props{color:#7ec8e3}
     .nav-user{display:flex;align-items:center;gap:10px;margin-right:auto}
     .nav-username{font-size:13px;color:rgba(255,255,255,.65)}
     .btn-nav{padding:8px 18px;border-radius:8px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:all .2s;border:none}
@@ -23,6 +24,15 @@
     .btn-logout:hover{background:rgba(201,168,76,.28)}
     .btn-login{background:var(--gold);color:var(--ink)}
     .btn-login:hover{background:var(--gold-l)}
+
+    /* زر نشر عقار */
+    .btn-publish{background:linear-gradient(135deg,var(--gold),var(--gold-l));color:var(--ink);padding:8px 20px;border-radius:8px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:800;text-decoration:none;transition:all .25s;display:flex;align-items:center;gap:6px;border:none;cursor:pointer;white-space:nowrap}
+    .btn-publish:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(201,168,76,.4)}
+
+    /* زر لوحة الأدمن */
+    .btn-admin{background:rgba(255,255,255,.12);color:#fff;padding:8px 18px;border-radius:8px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;text-decoration:none;transition:all .2s;display:flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,.2);white-space:nowrap}
+    .btn-admin:hover{background:rgba(255,255,255,.2)}
+    .pending-badge{background:#e74c3c;color:#fff;border-radius:20px;padding:2px 8px;font-size:11px;font-weight:800;line-height:1.5}
 
     /* ── HERO ── */
     .hero{background:linear-gradient(135deg,var(--navy-d) 0%,var(--navy) 60%,#1e4d7b 100%);padding:72px 40px 80px;text-align:center;position:relative;overflow:hidden}
@@ -66,14 +76,9 @@
     .card{background:var(--white);border-radius:20px;overflow:hidden;box-shadow:var(--card-shadow);transition:all .35s cubic-bezier(.22,1,.36,1);animation:fadeCard .5s ease both}
     .card:hover{transform:translateY(-6px);box-shadow:0 24px 56px rgba(0,0,0,.15)}
     @keyframes fadeCard{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-    .card:nth-child(1){animation-delay:.05s}
-    .card:nth-child(2){animation-delay:.1s}
-    .card:nth-child(3){animation-delay:.15s}
-    .card:nth-child(4){animation-delay:.2s}
-    .card:nth-child(5){animation-delay:.25s}
-    .card:nth-child(6){animation-delay:.3s}
+    .card:nth-child(1){animation-delay:.05s}.card:nth-child(2){animation-delay:.1s}.card:nth-child(3){animation-delay:.15s}
+    .card:nth-child(4){animation-delay:.2s}.card:nth-child(5){animation-delay:.25s}.card:nth-child(6){animation-delay:.3s}
 
-    /* Image area */
     .card-img{position:relative;height:210px;overflow:hidden;background:#e8e0d4}
     .card-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
     .card:hover .card-img img{transform:scale(1.05)}
@@ -86,7 +91,6 @@
     .fav-btn:hover{transform:scale(1.15);background:#fff}
     .fav-btn.active{background:#fff0f0}
 
-    /* Card body */
     .card-body{padding:20px 22px}
     .card-title{font-size:17px;font-weight:800;color:var(--ink);margin-bottom:6px;line-height:1.4;text-decoration:none;display:block}
     .card-title:hover{color:var(--navy)}
@@ -112,7 +116,8 @@
     .msgs .info{background:#f0f6fe;color:var(--navy);border-right:3px solid var(--navy)}
 
     @media(max-width:768px){
-      nav{padding:0 16px}
+      nav{padding:0 16px;gap:10px}
+      .nav-brand{font-size:17px}
       .hero{padding:48px 20px 56px}.hero h1{font-size:28px}
       .hero-stats{gap:24px}.hs-num{font-size:24px}
       .filter-wrap{padding:0 16px}
@@ -126,16 +131,38 @@
 <!-- NAVBAR -->
 <nav>
   <a href="{% url 'listing' %}" class="nav-brand">🏡 عقاراتي</a>
+
   <div class="nav-links">
     <a href="{% url 'listing' %}" class="active">العقارات</a>
     {% if user.is_authenticated %}
-    <a href="{% url 'my_favorites' %}" class="fav">❤️ المفضلة</a>
+      <a href="{% url 'my_favorites' %}" class="fav">❤️ المفضلة</a>
+      {% if not user.is_staff %}
+        <a href="{% url 'my_properties' %}" class="my-props">🏠 عقاري</a>
+      {% endif %}
     {% endif %}
   </div>
+
   <div class="nav-user">
     {% if user.is_authenticated %}
+
+      {% if user.is_staff %}
+        <!-- زر لوحة الأدمن -->
+        <a href="{% url 'admin_dashboard' %}" class="btn-admin">
+          🛡️ لوحة الإدارة
+          {% if pending_count > 0 %}
+            <span class="pending-badge">{{ pending_count }}</span>
+          {% endif %}
+        </a>
+      {% else %}
+        <!-- زر نشر عقار للمستخدم العادي -->
+        <a href="{% url 'create_property' %}" class="btn-publish">
+          ＋ نشر عقار
+        </a>
+      {% endif %}
+
       <span class="nav-username">{{ user.first_name|default:user.username }}</span>
       <a href="{% url 'logout' %}" class="btn-nav btn-logout">خروج</a>
+
     {% else %}
       <a href="{% url 'login' %}" class="btn-nav btn-login">تسجيل الدخول</a>
       <a href="{% url 'register' %}" class="btn-nav btn-logout" style="border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.8)">إنشاء حساب</a>
@@ -161,9 +188,9 @@
     <select name="type" class="fi-input fi-select">
       <option value="">كل الأنواع</option>
       <option value="apartment" {% if filters.type == 'apartment' %}selected{% endif %}>شقة</option>
-      <option value="villa" {% if filters.type == 'villa' %}selected{% endif %}>فيلا</option>
-      <option value="office" {% if filters.type == 'office' %}selected{% endif %}>مكتب</option>
-      <option value="land" {% if filters.type == 'land' %}selected{% endif %}>أرض</option>
+      <option value="villa"     {% if filters.type == 'villa'     %}selected{% endif %}>فيلا</option>
+      <option value="office"    {% if filters.type == 'office'    %}selected{% endif %}>مكتب</option>
+      <option value="land"      {% if filters.type == 'land'      %}selected{% endif %}>أرض</option>
       <option value="warehouse" {% if filters.type == 'warehouse' %}selected{% endif %}>مستودع</option>
     </select>
     <select name="status" class="fi-input fi-select">
@@ -171,7 +198,7 @@
       <option value="sale" {% if filters.status == 'sale' %}selected{% endif %}>للبيع</option>
       <option value="rent" {% if filters.status == 'rent' %}selected{% endif %}>للإيجار</option>
     </select>
-    <input type="number" name="min_price" class="fi-input fi-price" placeholder="أقل سعر" value="{{ filters.min_price }}">
+    <input type="number" name="min_price" class="fi-input fi-price" placeholder="أقل سعر"  value="{{ filters.min_price }}">
     <input type="number" name="max_price" class="fi-input fi-price" placeholder="أعلى سعر" value="{{ filters.max_price }}">
     <button type="submit" class="btn-filter">بحث</button>
     <a href="{% url 'listing' %}" class="btn-reset">مسح</a>
@@ -198,7 +225,6 @@
   <div class="grid">
     {% for p in properties %}
     <div class="card">
-      <!-- Image -->
       <div class="card-img">
         {% with img=p.get_primary_image %}
           {% if img %}
@@ -220,14 +246,14 @@
         {% if user.is_authenticated %}
         <form method="post" action="{% url 'toggle_favorite' p.pk %}" style="display:inline">
           {% csrf_token %}
-          <button type="submit" class="fav-btn {% if p.pk in favorite_ids %}active{% endif %}" title="{% if p.pk in favorite_ids %}حذف من المفضلة{% else %}أضف للمفضلة{% endif %}">
+          <button type="submit" class="fav-btn {% if p.pk in favorite_ids %}active{% endif %}"
+                  title="{% if p.pk in favorite_ids %}حذف من المفضلة{% else %}أضف للمفضلة{% endif %}">
             {% if p.pk in favorite_ids %}❤️{% else %}🤍{% endif %}
           </button>
         </form>
         {% endif %}
       </div>
 
-      <!-- Body -->
       <div class="card-body">
         <a href="{% url 'detail' p.pk %}" class="card-title">{{ p.title }}</a>
         <div class="card-loc">
@@ -236,7 +262,7 @@
         </div>
         <div class="card-meta">
           <div class="meta-item">📐 <strong>{{ p.area|floatformat:0 }}</strong> م²</div>
-          {% if p.bedrooms %}<div class="meta-item">🛏 <strong>{{ p.bedrooms }}</strong> غرف</div>{% endif %}
+          {% if p.bedrooms  %}<div class="meta-item">🛏 <strong>{{ p.bedrooms  }}</strong> غرف</div>{% endif %}
           {% if p.bathrooms %}<div class="meta-item">🚿 <strong>{{ p.bathrooms }}</strong> حمام</div>{% endif %}
         </div>
         <div class="card-price">
@@ -246,9 +272,9 @@
         <div class="card-footer">
           <a href="{% url 'detail' p.pk %}" class="btn-detail">عرض التفاصيل</a>
           {% if user.is_authenticated %}
-          <a href="{% url 'negotiate' p.pk %}" class="btn-negotiate">💬 تفاوض</a>
+            <a href="{% url 'negotiate' p.pk %}" class="btn-negotiate">💬 تفاوض</a>
           {% else %}
-          <a href="{% url 'login' %}?next={% url 'negotiate' p.pk %}" class="btn-negotiate">💬 تفاوض</a>
+            <a href="{% url 'login' %}?next={% url 'negotiate' p.pk %}" class="btn-negotiate">💬 تفاوض</a>
           {% endif %}
         </div>
       </div>

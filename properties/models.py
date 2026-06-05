@@ -27,7 +27,9 @@ class Property(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='properties', verbose_name='المالك')
     created_at = models.DateTimeField(auto_now_add=True)
     is_available = models.BooleanField(default=True, verbose_name='متاح')
-    
+
+    # ── حقل الموافقة الجديد ──
+    is_approved = models.BooleanField(default=False, verbose_name='معتمد من الإدارة')
 
     class Meta:
         ordering = ['-created_at']

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة الإدارة | عقاراتي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--ink:#0d0d0d;--cream:#f2ede4;--gold:#c9a84c;--gold-l:#e8c96e;--navy:#1a3a5c;--navy-d:#0a2240;--white:#fff;--green:#27ae60;--red:#e74c3c}
+    body{font-family:'Cairo',sans-serif;background:#f0f2f5;min-height:100vh}
+
+    /* NAVBAR */
+    nav{background:var(--navy-d);height:66px;display:flex;align-items:center;padding:0 40px;gap:20px;position:sticky;top:0;z-index:200;box-shadow:0 4px 20px rgba(0,0,0,.25)}
+    .nav-brand{font-size:20px;font-weight:900;color:var(--gold-l);text-decoration:none;margin-left:auto}
+    .nav-back{color:rgba(255,255,255,.75);text-decoration:none;font-size:14px;font-weight:600;padding:8px 14px;border-radius:8px;transition:.2s;font-family:'Cairo',sans-serif}
+    .nav-back:hover{background:rgba(255,255,255,.1);color:#fff}
+    .nav-user{display:flex;align-items:center;gap:10px;margin-right:auto}
+    .nav-username{font-size:13px;color:rgba(255,255,255,.65)}
+    .btn-nav{padding:8px 18px;border-radius:8px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;text-decoration:none;background:rgba(201,168,76,.15);color:var(--gold-l);border:1px solid rgba(201,168,76,.35)}
+
+    /* HEADER */
+    .dash-header{background:linear-gradient(135deg,var(--navy-d),var(--navy));padding:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px}
+    .dash-title h1{font-size:28px;font-weight:900;color:#fff;margin-bottom:4px}
+    .dash-title p{font-size:14px;color:rgba(255,255,255,.55)}
+    .dash-stats{display:flex;gap:16px}
+    .stat-pill{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:14px 22px;text-align:center;min-width:100px}
+    .stat-pill .num{font-size:26px;font-weight:900;color:var(--gold-l)}
+    .stat-pill .lbl{font-size:12px;color:rgba(255,255,255,.55);margin-top:2px}
+    .stat-pill.pending-stat .num{color:#f39c12}
+    .stat-pill.ok-stat .num{color:#2ecc71}
+
+    /* MESSAGES */
+    .msgs-wrap{max-width:1200px;margin:24px auto 0;padding:0 32px}
+    .msgs{list-style:none}
+    .msgs li{padding:13px 18px;border-radius:12px;font-size:14px;margin-bottom:8px}
+    .msgs .success{background:#f0fef4;color:var(--green);border-right:3px solid var(--green)}
+    .msgs .error  {background:#fef0f0;color:var(--red);border-right:3px solid var(--red)}
+
+    /* TABS */
+    .tabs-wrap{max-width:1200px;margin:28px auto 0;padding:0 32px}
+    .tabs{display:flex;gap:4px;background:var(--white);border-radius:14px;padding:6px;box-shadow:0 2px 12px rgba(0,0,0,.06);width:fit-content}
+    .tab-btn{padding:10px 28px;border-radius:10px;border:none;font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:.2s;background:transparent;color:#888}
+    .tab-btn.active{background:var(--navy);color:#fff;box-shadow:0 4px 12px rgba(26,58,92,.25)}
+    .tab-count{display:inline-block;background:var(--red);color:#fff;border-radius:20px;padding:1px 7px;font-size:11px;margin-right:6px;line-height:1.6}
+    .tab-count.ok{background:var(--green)}
+
+    /* SECTION */
+    .section{max-width:1200px;margin:24px auto;padding:0 32px 60px}
+
+    /* EMPTY STATE */
+    .empty{text-align:center;padding:60px 20px;color:#bbb}
+    .empty .icon{font-size:56px;margin-bottom:14px}
+    .empty h3{font-size:18px;font-weight:700;color:#ccc}
+
+    /* PROPERTY ROW (pending) */
+    .prop-row{background:var(--white);border-radius:20px;box-shadow:0 4px 20px rgba(0,0,0,.07);overflow:hidden;margin-bottom:20px;display:grid;grid-template-columns:200px 1fr auto;animation:up .4s ease both}
+    @keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    .prop-img{height:100%;min-height:160px;background:#e8e0d4;display:flex;align-items:center;justify-content:center;font-size:52px;overflow:hidden}
+    .prop-img img{width:100%;height:100%;object-fit:cover}
+    .prop-body{padding:24px 28px;display:flex;flex-direction:column;justify-content:space-between}
+    .prop-top{}
+    .prop-name{font-size:19px;font-weight:900;color:var(--ink);margin-bottom:6px}
+    .prop-loc{font-size:13px;color:#888;display:flex;align-items:center;gap:5px;margin-bottom:12px}
+    .prop-meta{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+    .meta-tag{background:#f5f5f5;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700;color:#555;display:flex;align-items:center;gap:5px}
+    .meta-tag.gold{background:#fff8e8;color:#8a6a00}
+    .meta-tag.navy{background:#eef3f9;color:var(--navy)}
+    .meta-tag.green{background:#f0fef4;color:var(--green)}
+    .prop-desc{font-size:13px;color:#999;line-height:1.7;max-height:50px;overflow:hidden}
+    .prop-owner{margin-top:12px;font-size:13px;color:#aaa;display:flex;align-items:center;gap:8px}
+    .owner-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-l));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--ink);flex-shrink:0}
+    .owner-info .name{font-weight:700;color:#666;font-size:13px}
+    .owner-info .date{font-size:11px;color:#bbb}
+
+    /* ACTIONS PANEL */
+    .prop-actions{padding:20px;display:flex;flex-direction:column;gap:10px;justify-content:center;border-right:1px solid #f0f0f0;min-width:140px;align-items:stretch}
+    .btn-approve{padding:13px 18px;background:linear-gradient(135deg,#27ae60,#2ecc71);color:#fff;border:none;border-radius:12px;font-family:'Cairo',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:.25s;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px}
+    .btn-approve:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(39,174,96,.35)}
+    .btn-reject{padding:13px 18px;background:#fff0f0;color:var(--red);border:2px solid #ffd5d5;border-radius:12px;font-family:'Cairo',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:.25s;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px}
+    .btn-reject:hover{background:var(--red);color:#fff;border-color:var(--red)}
+
+    /* Approved grid */
+    .approved-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
+    .appr-card{background:var(--white);border-radius:16px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.07);display:flex;flex-direction:column}
+    .appr-img{height:150px;background:#e8e0d4;display:flex;align-items:center;justify-content:center;font-size:42px;overflow:hidden;position:relative}
+    .appr-img img{width:100%;height:100%;object-fit:cover}
+    .appr-approved-badge{position:absolute;bottom:8px;right:8px;background:var(--green);color:#fff;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700}
+    .appr-body{padding:16px}
+    .appr-title{font-size:15px;font-weight:800;color:var(--ink);margin-bottom:4px}
+    .appr-loc{font-size:12px;color:#aaa;margin-bottom:8px}
+    .appr-price{font-size:18px;font-weight:900;color:var(--navy)}
+    .appr-by{font-size:11px;color:#bbb;margin-top:8px}
+
+    @media(max-width:768px){
+      nav{padding:0 16px}
+      .dash-header{padding:28px 20px}
+      .tabs-wrap,.section,.msgs-wrap{padding:0 16px}
+      .prop-row{grid-template-columns:1fr}
+      .prop-img{min-height:160px;max-height:200px}
+      .prop-actions{flex-direction:row;border-right:none;border-top:1px solid #f0f0f0;min-width:auto}
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="{% url 'listing' %}" class="nav-brand">🏡 عقاراتي</a>
+  <a href="{% url 'listing' %}" class="nav-back">← العقارات</a>
+  <div class="nav-user">
+    <span class="nav-username">{{ user.first_name|default:user.username }} 🛡️</span>
+    <a href="{% url 'logout' %}" class="btn-nav">خروج</a>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<div class="dash-header">
+  <div class="dash-title">
+    <h1>🛡️ لوحة الإدارة</h1>
+    <p>مراجعة العقارات المرسلة والموافقة على نشرها</p>
+  </div>
+  <div class="dash-stats">
+    <div class="stat-pill pending-stat">
+      <div class="num">{{ pending_count }}</div>
+      <div class="lbl">بانتظار المراجعة</div>
+    </div>
+    <div class="stat-pill ok-stat">
+      <div class="num">{{ approved.count }}</div>
+      <div class="lbl">منشور</div>
+    </div>
+  </div>
+</div>
+
+<!-- MESSAGES -->
+{% if messages %}
+<div class="msgs-wrap">
+  <ul class="msgs">{% for m in messages %}<li class="{{ m.tags }}">{{ m }}</li>{% endfor %}</ul>
+</div>
+{% endif %}
+
+<!-- TABS -->
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('pending', this)">
+      ⏳ بانتظار المراجعة
+      {% if pending_count > 0 %}<span class="tab-count">{{ pending_count }}</span>{% endif %}
+    </button>
+    <button class="tab-btn" onclick="showTab('approved', this)">
+      ✅ المنشورة
+      <span class="tab-count ok">{{ approved.count }}</span>
+    </button>
+  </div>
+</div>
+
+<!-- PENDING SECTION -->
+<div class="section" id="tab-pending">
+  {% if pending %}
+    {% for p in pending %}
+    <div class="prop-row">
+      <!-- صورة -->
+      <div class="prop-img">
+        {% with img=p.get_primary_image %}
+          {% if img %}<img src="{{ img.image.url }}" alt="">
+          {% else %}
+            {% if p.property_type == 'villa' %}🏰
+            {% elif p.property_type == 'office' %}🏢
+            {% elif p.property_type == 'land' %}🌿
+            {% elif p.property_type == 'warehouse' %}🏭
+            {% else %}🏠{% endif %}
+          {% endif %}
+        {% endwith %}
+      </div>
+
+      <!-- تفاصيل -->
+      <div class="prop-body">
+        <div>
+          <div class="prop-name">{{ p.title }}</div>
+          <div class="prop-loc">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            {{ p.location }}
+          </div>
+          <div class="prop-meta">
+            <span class="meta-tag gold">💰 {{ p.price|floatformat:0 }} ريال</span>
+            <span class="meta-tag navy">{{ p.get_property_type_display }}</span>
+            <span class="meta-tag {% if p.status == 'sale' %}navy{% else %}green{% endif %}">{{ p.get_status_display }}</span>
+            <span class="meta-tag">📐 {{ p.area|floatformat:0 }} م²</span>
+            {% if p.bedrooms %}<span class="meta-tag">🛏 {{ p.bedrooms }} غرف</span>{% endif %}
+            {% if p.bathrooms %}<span class="meta-tag">🚿 {{ p.bathrooms }}</span>{% endif %}
+          </div>
+          {% if p.description %}
+          <div class="prop-desc">{{ p.description }}</div>
+          {% endif %}
+        </div>
+        <div class="prop-owner">
+          <div class="owner-av">{{ p.created_by.first_name|slice:":1"|upper|default:p.created_by.username|slice:":1"|upper }}</div>
+          <div class="owner-info">
+            <div class="name">{{ p.created_by.get_full_name|default:p.created_by.username }}</div>
+            <div class="date">أُرسل {{ p.created_at|date:"Y/m/d — H:i" }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- أزرار الإجراء -->
+      <div class="prop-actions">
+        <form method="post" action="{% url 'approve_property' p.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="btn-approve">✅ قبول</button>
+        </form>
+        <form method="post" action="{% url 'reject_property' p.pk %}"
+              onsubmit="return confirm('هل تريد رفض وحذف هذا العقار نهائياً؟')">
+          {% csrf_token %}
+          <button type="submit" class="btn-reject">🗑️ رفض</button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+
+  {% else %}
+    <div class="empty">
+      <div class="icon">🎉</div>
+      <h3>لا توجد عقارات بانتظار المراجعة</h3>
+      <p style="margin-top:8px;font-size:14px">كل شيء محدّث!</p>
+    </div>
+  {% endif %}
+</div>
+
+<!-- APPROVED SECTION (hidden by default) -->
+<div class="section" id="tab-approved" style="display:none">
+  {% if approved %}
+  <div class="approved-grid">
+    {% for p in approved %}
+    <div class="appr-card">
+      <div class="appr-img">
+        {% with img=p.get_primary_image %}
+          {% if img %}<img src="{{ img.image.url }}" alt="">
+          {% else %}
+            {% if p.property_type == 'villa' %}🏰
+            {% elif p.property_type == 'office' %}🏢
+            {% elif p.property_type == 'land' %}🌿
+            {% else %}🏠{% endif %}
+          {% endif %}
+        {% endwith %}
+        <span class="appr-approved-badge">✓ منشور</span>
+      </div>
+      <div class="appr-body">
+        <div class="appr-title">{{ p.title }}</div>
+        <div class="appr-loc">📍 {{ p.location }}</div>
+        <div class="appr-price">{{ p.price|floatformat:0 }} <span style="font-size:12px;font-weight:400;color:#aaa">ريال</span></div>
+        <div class="appr-by">بواسطة: {{ p.created_by.get_full_name|default:p.created_by.username }}</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+    <div class="empty">
+      <div class="icon">📭</div>
+      <h3>لا توجد عقارات منشورة بعد</h3>
+    </div>
+  {% endif %}
+</div>
+
+<script>
+function showTab(name, btn) {
+  document.querySelectorAll('.section[id^="tab-"]').forEach(s => s.style.display = 'none');
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).style.display = 'block';
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
