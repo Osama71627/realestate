@@ -30,6 +30,10 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'mysite.urls'
 
+ALLOWED_HOSTS = [
+    'اسم_حسابك.pythonanywhere.com'
+]
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
