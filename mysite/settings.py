@@ -31,7 +31,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'mysite.urls'
 
 ALLOWED_HOSTS = [
-    'اسم_حسابك.pythonanywhere.com'
+    'osama71627.pythonanywhere.com'
 ]
 
 TEMPLATES = [
